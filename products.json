@@ -1,0 +1,373 @@
+[
+  {
+    "name": "Apple iPhone 15",
+    "category": "Mobile",
+    "brand": "Apple",
+    "price": 54999,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSvgCPBUySTN1TjyFl-Lu-XqGoZlDnLDpnbQ&s"
+  },  
+  {
+    "name": "Apple iPhone 16",
+    "category": "Mobile",
+    "brand": "Apple",
+    "price": 69990,
+    "image": "https://inspireonline.in/cdn/shop/files/iPhone_16_Ultramarine_PDP_Image_Position_1__en-IN_db94e554-7c33-449b-bc12-3769c1f8a93b.jpg?v=1727247786"
+  },
+  {
+    "name": "Apple iPhone 17",
+    "category": "Mobile",
+    "brand": "Apple",
+    "price": 75999,
+    "image": "https://iplanet.one/cdn/shop/files/IMG-18071517_m_jpeg_1.jpg?v=1757449740&width=823"
+  },
+  {
+    "name": "Samsung Galaxy S21",
+    "category": "Mobile",
+    "brand": "Samsung",
+    "price": 49999,
+    "image": "https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/images/device/image/samsung-galaxy-s21-5g.png"
+  },
+  {
+    "name": "Samsung Galaxy S22",
+    "category": "Mobile",
+    "brand": "Samsung",
+    "price": 48999,
+    "image": "https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/23262015/ajohnson_220216_5033_0005.jpg?quality=90&strip=all&crop=16.666666666667,0,66.666666666667,100"
+  },
+  {
+    "name": "Samsung Galaxy S23",
+    "category": "Mobile",
+    "brand": "Samsung",
+    "price": 49999,
+    "image": "https://rukminim2.flixcart.com/image/480/640/xif0q/mobile/t/0/g/-original-imah4zp7fvqp8wev.jpeg?q=90"
+  },
+  {
+    "name": "Google Pixel 8",
+    "category": "Mobile",
+    "brand": "Google",
+    "price": 44999,
+    "image": "https://m.media-amazon.com/images/I/61iLQG-KbLL.jpg"
+  },
+  {
+    "name": "Google Pixel 9",
+    "category": "Mobile",
+    "brand": "Google",
+    "price": 49999,
+    "image":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbAf_m_bN56LgQfiZkFVMTSgy51aWc0DoP4A&s"
+  },
+  {
+    "name": "Google Pixel 10",
+    "category": "Mobile",
+    "brand": "Google",
+    "price": 59999,
+    "image":"https://img-prd-pim.poorvika.com/cdn-cgi/image/width=500,height=500,quality=75/product/Google-pixel-10-5g-indigo-12gb-256gb-Back-View.png"
+  },
+  {
+    "name": "Apple Watch Series 9",
+    "category": "Smartwatch",
+    "brand": "Apple",
+    "price": 25000,
+    "image": "https://m.media-amazon.com/images/I/81mHRsWENaL._AC_UF1000,1000_QL80_.jpg"
+  },
+  {
+    "name": "Apple Watch Series 10",
+    "category": "Smartwatch",
+    "brand": "Apple",
+    "price": 30000,
+    "image": "https://m.media-amazon.com/images/I/61szkHk7xfL._AC_UF1000,1000_QL80_.jpg"
+    },
+    {
+    "name": "Apple Watch Series 11",
+    "category": "Smartwatch",
+    "brand": "Apple",
+    "price": 35000,
+    "image": "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MXM23ref_FV99_VW_34FR+watch-case-46-aluminum-spacegray-nc-s11_VW_34FR+watch-face-46-aluminum-spacegray-s11_VW_34FR?wid=2000&hei=2000&fmt=png-alpha&.v=TnVrdDZWRlZzTURKbHFqOGh0dGpVRW5TeWJ6QW43NUFnQ2V4cmRFc1VnWmlQU0Rqc3FXZ3ZYMmhqV2ErcFBKUmJETkQzaW1LS2JGZ1BNdnBLL1NReUhqblBjd2JiYm5raG5NaEt4aVI1UUppUFNEanNxV2d2WDJoaldhK3BQSlIvbXNjRDVoT215U3h0bGtPWGVRQnBWQ3RPTys0V0JDL1E3U0xPSTVXcjNNRTJsZmRCaDlhOEFTanNHbHplV0g1NzFlZisvL2tDVnNqVTRHbGZFaVB6VXphektTYi9hekJnZEZKSWwzekJoTQ"
+    },
+    {
+    "name": "Galaxy Watch Ultra",
+    "category": "Smartwatch",
+    "brand": "Samsung",
+    "price": 45000,
+    "image": "https://images.samsung.com/is/image/samsung/p6pim/in/2407/gallery/in-galaxy-watch-ultra-l705-sm-l705fdaains-thumb-542169128"
+    },
+    {
+    "name": "Galaxy Watch 7",
+    "category": "Smartwatch",
+    "brand": "Samsung",
+    "price": 30000,
+    "image": "https://m.media-amazon.com/images/I/71QUv8DcRBL.jpg"
+    },
+    {
+    "name": "Galaxy Watch 8",
+    "category": "Smartwatch",
+    "brand": "Samsung",
+    "price": 35000,
+    "image": "https://m.media-amazon.com/images/I/71mych1cspL.jpg"
+    },
+    {
+    "name": "Pixel Watch 2",
+    "category": "Smartwatch",
+    "brand": "Google",
+    "price": 25000,
+    "image": "https://m.media-amazon.com/images/I/71nEDjUiHGL.jpg"
+    },
+    {
+    "name": "Pixel Watch 3",
+    "category": "Smartwatch",
+    "brand": "Google",
+    "price": 30000,
+    "image": "https://m.media-amazon.com/images/I/61HS1CQDhUL.jpg"
+    },
+    {
+    "name": "Pixel Watch 4",
+    "category": "Smartwatch",
+    "brand": "Google",
+    "price": 35000,
+    "image": "https://media-ik.croma.com/prod/https://media.tatacroma.com/Croma%20Assets/Wearables/Wearable%20Devices/Images/319514_0_p2MXFEt9d.png?updatedAt=1762427754462"
+    },
+    {
+    "name": "MacBook 15 Air",
+  "category": "Laptop",
+  "brand": "Apple",
+  "price": 60000,
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRl5Lu9EkKAaisqMF7OESae3GervIGpd1aN1Q&s"
+    },
+    {
+    "name": "MacBook Pro",
+  "category": "Laptop",
+  "brand": "Apple",
+  "price": 80000,
+  "image": "https://crdms.images.consumerreports.org/f_auto,w_600/prod/products/cr/models/412419-14-inch-laptops-apple-macbook-pro-14-8-core-m3-512gb-10037396.png"
+    },
+    {
+    "name": "iMac",
+  "category": "Laptop",
+  "brand": "Apple",
+  "price": 90000,
+  "image": "https://www.imagineonline.store/cdn/shop/files/iMac_M3_2-ports_Blue_PDP_Image_Position_1__global.jpg?v=1700565769&width=1445"
+    },
+    {
+    "name": "Legion 7",
+  "category": "Laptop",
+  "brand": "Lenovo",
+  "price": 85000,
+  "image": "https://p1-ofp.static.pub/fes/cms/2022/08/04/m17ckukv02qkh6zql6qvi9uxzvgm7e864922.png"
+    },
+    {
+    "name": "ROG Strix G16",
+  "category": "Laptop",
+  "brand": "Asus",
+  "price": 90000,
+  "image": "https://dlcdnwebimgs.asus.com/gain/68E55D05-BB23-4998-B3D4-7A389DFE58DA"
+    },
+    {
+    "name": "Alienware 18 Area-51",
+  "category": "Laptop",
+  "brand": "Dell",
+  "price": 245000,
+  "image": "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/alienware-notebooks/aa18250/spi/notebook-alienware-18-aa18250-area-51-blue-campaign-hero-504x350-ng.psd?fmt=jpg&wid=570&hei=400"
+    },
+    {
+    "name": "Acer Predator Helios 16",
+  "category": "Laptop",
+  "brand": "Acer",
+  "price": 250000,
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn_ePplMdxlJSLxO3S-AWMwghmzSGN0cE4zw&s"
+    },
+    {
+    "name": "Razer Blade 18",
+  "category": "Laptop",
+  "brand": "Razer",
+  "price": 180000,
+  "image": "https://assets2.razerzone.com/images/pnx.assets/2e7337344edbf67b6eb07cd46c48216f/razer-blade-18-kira11-ogimage-1200x630.webp"
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    },
+    {
+    "name":,
+  "category":,
+  "brand":,
+  "price":,
+  "image":
+    }
+]

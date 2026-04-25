@@ -1,0 +1,437 @@
+<!-- static/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Deepfake Detector</title>
+  <link rel="icon" type="image/x-icon" href="/static/hack.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#6ee7b7; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
+      --button:#0ea5a4; --accent-2:#7c3aed;
+    }
+    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    body{
+      background: linear-gradient(180deg,#071021 0%, #0c1b2a 100%);
+      color:#e6eef6; margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    }
+    .card{
+      width:720px; max-width:95%; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:16px; padding:28px; box-shadow: 0 10px 30px rgba(2,6,23,0.7);
+      display:flex; flex-direction:column; align-items:center; gap:16px;
+    }
+    h1{margin:0; font-size:22px; letter-spacing:0.2px}
+    .uploader{width:100%; display:flex; flex-direction:column; align-items:center; gap:12px}
+    .filebox{
+      display:flex; align-items:center; gap:12px; width:100%;
+      padding:14px 16px; border-radius:10px; background:var(--glass); border:1px solid rgba(255,255,255,0.03);
+      justify-content:space-between;
+    }
+    .filebox input[type="file"]{display:inline-block;}
+    .progress-wrap{width:100%; background:rgba(255,255,255,0.03); border-radius:8px; overflow:hidden; height:14px}
+    .progress-bar{height:14px; width:0%; transition:width 0.2s ease; background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    .controls{display:flex; gap:12px; width:100%; justify-content:center; margin-top:6px}
+    button{padding:10px 16px; border-radius:10px; border:0; cursor:pointer; font-weight:600}
+    button:disabled{opacity:0.5; cursor:not-allowed}
+    .detect-btn{background:linear-gradient(90deg,var(--button),var(--accent-2)); color:#052022}
+    .small{font-size:13px; color:var(--muted)}
+    .result{width:100%; margin-top:12px; display:flex; gap:16px; align-items:flex-start}
+    .result .card-2{flex:1; background:rgba(255,255,255,0.02); padding:12px; border-radius:8px}
+    img.gradcam{max-width:320px; width:100%; border-radius:8px; border:1px solid rgba(255,255,255,0.03)}
+    label.save-option{display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--muted)}
+    .popup{position:fixed; left:50%; top:14%; transform:translateX(-50%); background:#06202a; padding:12px 20px; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,0.6); display:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Deepfake Detector — Upload & Analyze</h1>
+    <div class="uploader">
+      <div class="filebox">
+        <span class="small">Choose a video file (mp4, mov, avi)</span>
+        <input id="videoInput" type="file" accept="video/*" />
+      </div>
+
+      <div class="progress-wrap" aria-hidden="true">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+      <div class="controls">
+        <label class="save-option">
+          <input id="saveGradcam" type="checkbox" /> Save Grad-CAM output
+        </label>
+        <button id="detectBtn" class="detect-btn" disabled>Detect</button>
+      </div>
+
+      <div class="small">Progress will show while uploading. Detect button activates after upload.</div>
+    </div>
+
+    <div id="resultArea" class="result" style="display:none">
+      <div class="card-2">
+        <div class="small">Average fake score:</div>
+        <div id="score" style="font-size:28px; font-weight:700; margin-top:6px">—</div>
+      </div>
+      <div class="card-2" style="max-width:360px">
+        <div class="small">Grad-CAM Preview:</div>
+        <img id="gradcamImg" class="gradcam" src="" alt="Grad-CAM preview" />
+        <div style="margin-top:8px"><a id="downloadLink" href="#" download>Download Grad-CAM</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="popup" class="popup">✅ Video uploaded</div>
+
+
+<script>
+  const videoInput = document.getElementById("videoInput");
+  const progressBar = document.getElementById("progressBar");
+  const detectBtn = document.getElementById("detectBtn");
+  const popup = document.getElementById("popup");
+  const resultArea = document.getElementById("resultArea");
+  const scoreEl = document.getElementById("score");
+  const gradcamImg = document.getElementById("gradcamImg");
+  const downloadLink = document.getElementById("downloadLink");
+  const saveCheckbox = document.getElementById("saveGradcam");
+  let uploadedFilename = null;
+  let currentXhr = null;
+
+  function showPopup(msg="✅ Video uploaded"){
+    popup.textContent = msg;
+    popup.style.display = "block";
+    setTimeout(()=> popup.style.display = "none", 1600);
+  }
+
+  function resetUIForNewUpload() {
+    // Reset progress bar visually to 0%
+    progressBar.style.transition = "none";
+    progressBar.style.width = "0%";
+    // Force reflow so the browser acknowledges the width reset before enabling transition
+    // eslint-disable-next-line no-unused-expressions
+    progressBar.offsetWidth;
+    progressBar.style.transition = ""; // back to CSS-controlled transition
+
+    // Disable detect until upload finishes
+    detectBtn.disabled = true;
+    uploadedFilename = null;
+
+    // Clear previous results
+    resultArea.style.display = "none";
+    scoreEl.textContent = "—";
+    gradcamImg.src = "";
+    downloadLink.href = "#";
+    downloadLink.style.display = "none";
+    gradcamImg.style.display = "none";
+  }
+
+  // When file input changes -> start fresh upload
+  videoInput.addEventListener("change", () => {
+    const file = videoInput.files[0];
+    if(!file) return;
+    resetUIForNewUpload();
+    uploadFile(file);
+  });
+
+  function uploadFile(file){
+    // Abort previous upload if any
+    if (currentXhr) {
+      try { currentXhr.abort(); } catch(e) {}
+      currentXhr = null;
+    }
+
+    const url = "/upload";
+    const form = new FormData();
+    form.append("video", file);
+    const xhr = new XMLHttpRequest();
+    currentXhr = xhr;
+
+    xhr.open("POST", url, true);
+
+    // Reset progress immediately to show fresh start
+    progressBar.style.width = "0%";
+
+    // Update upload progress
+    xhr.upload.onprogress = function(e){
+      if(e.lengthComputable){
+        const percent = (e.loaded / e.total) * 100;
+        progressBar.style.width = percent + "%";
+      } else {
+        // For some servers that don't provide content-length, animate an indeterminate progress
+        progressBar.style.width = "50%";
+      }
+    };
+
+    xhr.onload = function(){
+      currentXhr = null;
+      if(xhr.status === 200){
+        try {
+          const res = JSON.parse(xhr.responseText);
+          if(res.success){
+            uploadedFilename = res.filename;
+            // ensure bar shows complete
+            progressBar.style.width = "100%";
+            detectBtn.disabled = false;
+            showPopup("✅ Video uploaded");
+          } else {
+            alert("Upload failed: " + (res.error || "unknown"));
+            // revert progress
+            progressBar.style.width = "0%";
+          }
+        } catch(err) {
+          alert("Unexpected server response.");
+          progressBar.style.width = "0%";
+        }
+      } else {
+        alert("Upload failed with status " + xhr.status);
+        progressBar.style.width = "0%";
+      }
+    };
+
+    xhr.onerror = function(){
+      currentXhr = null;
+      alert("Upload error. Please try again.");
+      progressBar.style.width = "0%";
+    };
+
+    xhr.onabort = function(){
+      currentXhr = null;
+      // user or code aborted previous upload; reset state
+      progressBar.style.width = "0%";
+      detectBtn.disabled = true;
+    };
+
+    // Optional: set a timeout (ms) if you want to avoid hanging requests
+    // xhr.timeout = 5 * 60 * 1000; // 5 minutes
+    // xhr.ontimeout = function(){ alert("Upload timed out."); progressBar.style.width = "0%"; };
+
+    xhr.send(form);
+  }
+
+  detectBtn.addEventListener("click", () => {
+    if(!uploadedFilename){ alert("No uploaded file found"); return; }
+    detectBtn.disabled = true;
+    detectBtn.textContent = "Detecting...";
+
+    const saveGradcam = saveCheckbox.checked;
+    const form = new FormData();
+    form.append("filename", uploadedFilename);
+    form.append("save_gradcam", saveGradcam ? "true" : "false");
+
+    fetch("/detect", { method: "POST", body: form })
+      .then(r => r.json())
+      .then(data => {
+  detectBtn.disabled = false;
+  detectBtn.textContent = "Detect";
+
+  if (!data.success) {
+    alert("Detection failed: " + (data.error || "unknown"));
+    return;
+  }
+
+  // Display avg score scaled to 100x
+  if (typeof data.avg_score === "number") {
+    const displayScore = (data.avg_score * 100).toFixed(2); // ×100 as you requested
+    scoreEl.textContent = displayScore;
+  } else {
+    scoreEl.textContent = "—";
+  }
+
+  // By API contract, data.is_deepfake tells us whether we should show gradcam/download
+  const isDeepfake = !!data.is_deepfake;
+
+  if (isDeepfake) {
+    // Show grad-cam if available (saved file URL or base64)
+    if (data.gradcam_url) {
+      gradcamImg.src = data.gradcam_url;
+      downloadLink.href = data.gradcam_url;
+      // instruct browser to download with a filename
+      downloadLink.setAttribute("download", "gradcam.jpg");
+      downloadLink.style.display = "inline";
+      gradcamImg.style.display = "block";
+    } else if (data.gradcam_base64) {
+      gradcamImg.src = "data:image/jpeg;base64," + data.gradcam_base64;
+      // enable download by setting href to same base64 data
+      downloadLink.href = gradcamImg.src;
+      downloadLink.setAttribute("download", "gradcam.jpg");
+      downloadLink.style.display = "inline";
+      gradcamImg.style.display = "block";
+    } else {
+      // Deepfake but no gradcam (unlikely) — hide download but show placeholder
+      gradcamImg.src = "";
+      gradcamImg.alt = "Grad-CAM not available";
+      gradcamImg.style.display = "none";
+      downloadLink.style.display = "none";
+    }
+  } else {
+    // Not detected as deepfake: hide gradcam preview & download link
+    gradcamImg.src = "";
+    gradcamImg.style.display = "none";
+    downloadLink.style.display = "none";
+
+    // Optionally show a friendly message in place of the image:
+    gradcamImg.alt = "Video not detected as deepfake — no Grad-CAM available";
+  }
+
+  // Reveal the results area regardless (shows score + either image or message)
+  resultArea.style.display = "flex";
+})
+
+//       .then(data => {
+//         detectBtn.disabled = false;
+//         detectBtn.textContent = "Detect";
+//         if(data.success){
+//           if(typeof data.avg_score === "number"){
+//             const displayScore = (data.avg_score * 100).toFixed(2);
+//             scoreEl.textContent = displayScore;
+//           } else {
+//             scoreEl.textContent = "—";
+//           }
+
+
+//           if (data.gradcam_url) {
+//            // If saved -> load from file
+//             gradcamImg.src = data.gradcam_url;
+//             downloadLink.href = data.gradcam_url;
+//           } 
+//           else if (data.gradcam_base64) {
+//             // Not saved -> show preview only
+//             gradcamImg.src = "data:image/jpeg;base64," + data.gradcam_base64;
+//             downloadLink.href = "javascript:void(0)";
+//           } 
+//           else {
+//             gradcamImg.src = "";
+//             downloadLink.href = "#";
+//             gradcamImg.alt = "No Grad-CAM generated";
+//           }
+
+// resultArea.style.display = "flex";
+
+//           // if(data.gradcam_url){
+//           //   gradcamImg.src = data.gradcam_url;
+//           //   downloadLink.href = data.gradcam_url;
+//           //   resultArea.style.display = "flex";
+//           // } else {
+//           //   gradcamImg.src = "";
+//           //   downloadLink.href = "#";
+//           //   resultArea.style.display = "flex";
+//           //   gradcamImg.alt = "No suspicious frame / no grad-cam generated";
+//           // }
+//         } else {
+//           alert("Detection failed: " + (data.error || "unknown"));
+//         }
+//       })
+      .catch(err => {
+        detectBtn.disabled = false;
+        detectBtn.textContent = "Detect";
+        alert("Error: " + err);
+      });
+  });
+</script>
+
+
+  <!-- <script>
+    const videoInput = document.getElementById("videoInput");
+    const progressBar = document.getElementById("progressBar");
+    const detectBtn = document.getElementById("detectBtn");
+    const popup = document.getElementById("popup");
+    const resultArea = document.getElementById("resultArea");
+    const scoreEl = document.getElementById("score");
+    const gradcamImg = document.getElementById("gradcamImg");
+    const downloadLink = document.getElementById("downloadLink");
+    let uploadedFilename = null;
+
+    function showPopup(msg="✅ Video uploaded"){
+      popup.textContent = msg;
+      popup.style.display = "block";
+      setTimeout(()=> popup.style.display = "none", 1600);
+    }
+
+    videoInput.addEventListener("change", () => {
+      const file = videoInput.files[0];
+      if(!file) return;
+      uploadFile(file);
+    });
+
+    function uploadFile(file){
+      const url = "/upload";
+      const form = new FormData();
+      form.append("video", file);
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
+
+      xhr.upload.onprogress = function(e){
+        if(e.lengthComputable){
+          const percent = (e.loaded / e.total) * 100;
+          progressBar.style.width = percent + "%";
+        }
+      };
+
+      xhr.onload = function(){
+        if(xhr.status === 200){
+          const res = JSON.parse(xhr.responseText);
+          if(res.success){
+            uploadedFilename = res.filename;
+            progressBar.style.width = "100%";
+            detectBtn.disabled = false;
+            showPopup("✅ Video uploaded");
+          } else {
+            alert("Upload failed: " + (res.error || "unknown"));
+          }
+        } else {
+          alert("Upload failed with status " + xhr.status);
+        }
+      };
+
+      xhr.onerror = function(){
+        alert("Upload error");
+      };
+
+      xhr.send(form);
+    }
+
+    detectBtn.addEventListener("click", () => {
+      if(!uploadedFilename){ alert("No uploaded file found"); return; }
+      detectBtn.disabled = true;
+      detectBtn.textContent = "Detecting...";
+
+      const saveGradcam = document.getElementById("saveGradcam").checked;
+      const form = new FormData();
+      form.append("filename", uploadedFilename);
+      form.append("save_gradcam", saveGradcam ? "true" : "false");
+
+      fetch("/detect", { method: "POST", body: form })
+        .then(r => r.json())
+        .then(data => {
+          detectBtn.disabled = false;
+          detectBtn.textContent = "Detect";
+          if(data.success){
+            if(typeof data.avg_score === "number"){
+              const displayScore = (data.avg_score * 10).toFixed(2);
+              scoreEl.textContent = displayScore;
+            } else {
+              scoreEl.textContent = "—";
+            }
+
+            if(data.gradcam_url){
+              gradcamImg.src = data.gradcam_url;
+              downloadLink.href = data.gradcam_url;
+              resultArea.style.display = "flex";
+            } else {
+              gradcamImg.src = "";
+              downloadLink.href = "#";
+              resultArea.style.display = "flex";
+              // if no gradcam -> indicate clean video
+              gradcamImg.alt = "No suspicious frame / no grad-cam generated";
+            }
+          } else {
+            alert("Detection failed: " + (data.error || "unknown"));
+          }
+        })
+        .catch(err => {
+          detectBtn.disabled = false;
+          detectBtn.textContent = "Detect";
+          alert("Error: " + err);
+        });
+    });
+  </script> -->
+</body>
+</html>
